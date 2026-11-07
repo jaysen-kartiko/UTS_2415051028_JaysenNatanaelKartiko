@@ -21,7 +21,7 @@ class RatingProvider with ChangeNotifier {
     try {
       _ratings = await _repository.getRatings();
     } catch (e) {
-      _errorMessage = e.toString();
+      _errorMessage = 'Gagal memuat data review dari database: ${e.toString()}';
     } finally {
       _isLoading = false;
       notifyListeners();
@@ -36,6 +36,7 @@ class RatingProvider with ChangeNotifier {
     required bool favorite,
   }) async {
     try {
+      _errorMessage = '';
       final newRating = MovieRating(
         createdAt: DateTime.now().toIso8601String(),
         rating: rating,
@@ -49,7 +50,7 @@ class RatingProvider with ChangeNotifier {
       await fetchRatings();
       return true;
     } catch (e) {
-      _errorMessage = e.toString();
+      _errorMessage = 'Gagal menyimpan review ke database: ${e.toString()}';
       notifyListeners();
       return false;
     }
@@ -63,6 +64,7 @@ class RatingProvider with ChangeNotifier {
     required bool favorite,
   }) async {
     try {
+      _errorMessage = '';
       final data = {
         'rating': rating,
         'note': note,
@@ -73,7 +75,7 @@ class RatingProvider with ChangeNotifier {
       await fetchRatings();
       return true;
     } catch (e) {
-      _errorMessage = e.toString();
+      _errorMessage = 'Gagal memperbarui review: ${e.toString()}';
       notifyListeners();
       return false;
     }
@@ -81,11 +83,12 @@ class RatingProvider with ChangeNotifier {
 
   Future<bool> deleteRating(int id) async {
     try {
+      _errorMessage = '';
       await _repository.removeRating(id);
       await fetchRatings();
       return true;
     } catch (e) {
-      _errorMessage = e.toString();
+      _errorMessage = 'Gagal menghapus review: ${e.toString()}';
       notifyListeners();
       return false;
     }
