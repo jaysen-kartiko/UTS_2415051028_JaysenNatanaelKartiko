@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../../core/providers/rating_provider.dart';
 
 class AddReviewScreen extends StatefulWidget {
   final Map<String, dynamic>? movieData;
@@ -25,6 +27,7 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
   @override
   Widget build(BuildContext context) {
     final movie = widget.movieData ?? {
+      'id': '1',
       'title': 'Oppenheimer',
       'year': 2023,
       'poster_url': 'https://picsum.photos/seed/oppenheimer/300/450',
@@ -48,7 +51,7 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
                   ClipRRect(
                     borderRadius: BorderRadius.circular(8),
                     child: Image.network(
-                      movie['poster_url'],
+                      movie['poster_url'] ?? '',
                       width: 60,
                       height: 90,
                       fit: BoxFit.cover,
@@ -150,7 +153,7 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
                     },
                     icon: const Icon(Icons.calendar_today, color: Colors.brown, size: 16),
                     label: Text(
-                      '${_watchDate.day}-${_watchDate.month}-${_watchDate.year}',
+                      '${_watchDate.year}-${_watchDate.month.toString().padLeft(2, '0')}-${_watchDate.day.toString().padLeft(2, '0')}',
                       style: const TextStyle(color: Colors.brown),
                     ),
                   ),
@@ -174,9 +177,22 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
                 width: double.infinity,
                 height: 48,
                 child: ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
                     if (_formKey.currentState!.validate()) {
-                      Navigator.pop(context);
+                      final ratingProvider = Provider.of<RatingProvider>(context, listen: false);
+                      final formattedDate = '${_watchDate.year}-${_watchDate.month.toString().padLeft(2, '0')}-${_watchDate.day.toString().padLeft(2, '0')}';
+                      
+                      final success = await ratingProvider.addRating(
+                        movieId: movie['id'].toString(),
+                        rating: _rating,
+                        note: _noteController.text,
+                        watchDate: formattedDate,
+                        favorite: _favorite,
+                      );
+
+                      if (success && mounted) {
+                        Navigator.pop(context);
+                      }
                     }
                   },
                   style: ElevatedButton.styleFrom(
