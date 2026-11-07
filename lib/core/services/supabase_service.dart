@@ -19,5 +19,9 @@ class SupabaseService {
     await _client.from('movie_ratings').insert(rating.toJson());
   }
 
+  Future<void> updateRating(int id, Map<String, dynamic> data) async {
+    await _client.from('movie_ratings').update(data).eq('id', id);
+  }
 
+  
 }
