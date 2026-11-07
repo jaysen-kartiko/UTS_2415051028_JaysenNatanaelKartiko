@@ -79,4 +79,15 @@ class RatingProvider with ChangeNotifier {
     }
   }
 
+  Future<bool> deleteRating(int id) async {
+    try {
+      await _repository.removeRating(id);
+      await fetchRatings();
+      return true;
+    } catch (e) {
+      _errorMessage = e.toString();
+      notifyListeners();
+      return false;
+    }
+  }
 }
