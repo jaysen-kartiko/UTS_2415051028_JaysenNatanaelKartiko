@@ -21,8 +21,8 @@ class _MovieListState extends State<MovieList> {
   String selectedCountry = 'Semua';
   bool isGrid = true;
 
-  final List<String> genres = ['Semua', 'Sci-Fi', 'Drama', 'Action', 'Animation'];
-  final List<String> countries = ['Semua', 'USA', 'UK', 'South Korea'];
+  final List<String> genres = ['Semua', 'Sci-Fi', 'Drama', 'Action', 'Animation', 'Thriller', 'Crime', 'Romance', 'Comedy'];
+    final List<String> countries = ['Semua', 'United States', 'Indonesia', 'South Korea', 'Japan'];
 
   @override
   Widget build(BuildContext context) {
