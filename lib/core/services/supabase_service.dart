@@ -23,5 +23,15 @@ class SupabaseService {
     await _client.from('movie_ratings').update(data).eq('id', id);
   }
 
-  
+  Future<void> deleteRating(int id) async {
+    await _client.from('movie_ratings').delete().eq('id', id);
+  }
+  Future<UserProfile> fetchUserProfile(int userId) async {
+  final response = await _client
+      .from('users')
+      .select()
+      .eq('id', userId)
+      .single();
+  return UserProfile.fromJson(response);
+}
 }
